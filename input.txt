@@ -1,6 +1,56 @@
+// Single-line comment
 /*
-void main(void)
-{	int a=10f; int b=20.5;
-	b = a++;
-}
+   Multi-line comment
+   Testing lexical analyzer
 */
+
+public class LexicalAnalyzerTest {
+    public static void main(String[] args) {
+        // Identifiers
+        int a = 10, b = 20;
+        float c = 30.5f;
+        double d = 40.123;
+        char ch = 'X';
+        String str = "Hello, World!";
+        
+        // Arithmetic Operators
+        int sum = a + b;
+        int diff = a - b;
+        int product = a * b;
+        int quotient = a / b;
+        int remainder = a % b;
+
+        // Arithmetic Assignment Operators
+        a += 5;
+        b -= 3;
+        c *= 2;
+        d /= 2.0;
+        a %= 2;
+
+        // Relational Operators
+        boolean result1 = (a < b);
+        boolean result2 = (a <= b);
+        boolean result3 = (a > b);
+        boolean result4 = (a >= b);
+        boolean result5 = (a == b);
+        boolean result6 = (a != b);
+
+        // Logical Operators
+        boolean logic1 = (result1 && result2);
+        boolean logic2 = (result3 || result4);
+        boolean logic3 = !result5;
+
+        // Increment/Decrement Operators
+        a++;
+        b--;
+
+        // Assignment Operator
+        int x = 100;
+
+        // Punctuation Marks
+        System.out.println("Testing lexical analyzer:");
+        System.out.println("Sum: " + sum);
+        System.out.println("Character: " + ch);
+        System.out.println("String: " + str);
+    }
+}

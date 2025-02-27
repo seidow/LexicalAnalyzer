@@ -1,4 +1,10 @@
+/*
+TEAM MEMBERS
+Saed Mohamed Eidow      2250373
+Yazeed Saad AlOmari     2250589
 
+Section: CS1
+*/
 import java.io.*;
 
 public class LexicalAnalyzer {
@@ -81,6 +87,8 @@ public class LexicalAnalyzer {
                                     state = 34;
                                 case '=' ->
                                     state = 37;
+                                case '.' ->
+                                    state = 38;
                                 case '?' ->
                                     state = 40;
                                 case ':' ->
@@ -325,6 +333,15 @@ public class LexicalAnalyzer {
                         }
                         state = 0;
                     }
+                    
+                    case 38 -> {
+                        //State for handling punctuation dot .
+                        lexeme = new StringBuilder();
+                        lexeme.append((char) lookahead);
+                        writeToken(lexeme.toString(), "dot_symbol");
+                        lookahead = input.read();
+                        state = 0;
+                    }
 
                     case 40 -> {
                         //State for handling ternary operator ?
@@ -505,8 +522,10 @@ public class LexicalAnalyzer {
                                     error("Unclosed multi-line comment");
                                     state = 0;
                                 }
-                                case '*' -> state = 54; // Potential end of comment
-                                default -> state = 53; // Stay in comment processing
+                                case '*' ->
+                                    state = 54; // Potential end of comment
+                                default ->
+                                    state = 53; // Stay in comment processing
                             }
                         } catch (IOException e) {
                             error("Error reading multi-line comment: " + e.getMessage());
