@@ -1,6 +1,4 @@
 
-
-
 import java.io.*;
 
 public class LexicalAnalyzer {
@@ -57,32 +55,58 @@ public class LexicalAnalyzer {
                             state = 0;
                         } else {
                             switch (lookahead) {
-                                case '&' -> state = 3;
-                                case '|' -> state = 6;
-                                case '~' -> state = 9;
-                                case '!' -> state = 10;
-                                case '^' -> state = 13;
-                                case '+' -> state = 14;
-                                case '-' -> state = 18;
-                                case '*' -> state = 22;
-                                case '%' -> state = 25;
-                                case '/' -> state = 28;
-                                case '<' -> state = 31;
-                                case '>' -> state = 34;
-                                case '=' -> state = 37;
-                                case '?' -> state = 40;
-                                case ':' -> state = 41;
-                                case ';' -> state = 42;
-                                case ',' -> state = 43;
-                                case '(' -> state = 44;
-                                case ')' -> state = 45;
-                                case '{' -> state = 46;
-                                case '}' -> state = 47;
-                                case '[' -> state = 48;
-                                case ']' -> state = 49;
-                                case '\'' -> state = 50;
-                                case '\"' -> state = 51;
-                                default -> error("Unrecognized symbol '" + (char) lookahead + "'");
+                                case '&' ->
+                                    state = 3;
+                                case '|' ->
+                                    state = 6;
+                                case '~' ->
+                                    state = 9;
+                                case '!' ->
+                                    state = 10;
+                                case '^' ->
+                                    state = 13;
+                                case '+' ->
+                                    state = 14;
+                                case '-' ->
+                                    state = 18;
+                                case '*' ->
+                                    state = 22;
+                                case '%' ->
+                                    state = 25;
+                                case '/' ->
+                                    state = 28;
+                                case '<' ->
+                                    state = 31;
+                                case '>' ->
+                                    state = 34;
+                                case '=' ->
+                                    state = 37;
+                                case '?' ->
+                                    state = 40;
+                                case ':' ->
+                                    state = 41;
+                                case ';' ->
+                                    state = 42;
+                                case ',' ->
+                                    state = 43;
+                                case '(' ->
+                                    state = 44;
+                                case ')' ->
+                                    state = 45;
+                                case '{' ->
+                                    state = 46;
+                                case '}' ->
+                                    state = 47;
+                                case '[' ->
+                                    state = 48;
+                                case ']' ->
+                                    state = 49;
+                                case '\'' ->
+                                    state = 50;
+                                case '\"' ->
+                                    state = 51;
+                                default ->
+                                    error("Unrecognized symbol '" + (char) lookahead + "'");
                             }
                         }
                     }
@@ -106,7 +130,7 @@ public class LexicalAnalyzer {
                         }
                         state = 0;
                     }
-             
+
                     case 6 -> {
                         // State for handling '&' operators: differentiate between bitwise '&' and logical '&&'
                         lexeme = new StringBuilder();
@@ -143,7 +167,7 @@ public class LexicalAnalyzer {
                         }
                         state = 0;
                     }
-                        
+
                     case 13 -> {
                         //State for handling Bitwise XOR
                         lexeme = new StringBuilder();
@@ -226,22 +250,37 @@ public class LexicalAnalyzer {
                         }
                         state = 0;
                     }
-                        
+
                     case 28 -> {
-                        // State for handling '/' operators: /=, /
+                        // State for handling '/' operators: /=, /, comments
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
                         lookahead = input.read();
+
                         if (lookahead == '=') {
+                            // Handle division assignment
                             lexeme.append((char) lookahead);
                             writeToken(lexeme.toString(), "DivAssign_Op");
                             lookahead = input.read();
+                            state = 0;
+                        } else if (lookahead == '/') {
+                            // Single-line comment
+                            lookahead = input.read();
+                            while (lookahead != -1 && lookahead != '\n' && lookahead != '\r') {
+                                lookahead = input.read();
+                            }
+                            state = 0;
+                        } else if (lookahead == '*') {
+                            // Start of multi-line comment
+                            lookahead = input.read();
+                            state = 53; // Transition to multi-line comment processing
                         } else {
+                            // Regular division operator
                             writeToken(lexeme.toString(), "Div_Op");
+                            state = 0;
                         }
-                        state = 0;
                     }
-                        
+
                     case 31 -> {
                         // State for handling '<' operators: <=, <
                         lexeme = new StringBuilder();
@@ -256,7 +295,7 @@ public class LexicalAnalyzer {
                         }
                         state = 0;
                     }
-                        
+
                     case 34 -> {
                         // State for handling '>' operators: >=, >
                         lexeme = new StringBuilder();
@@ -295,7 +334,7 @@ public class LexicalAnalyzer {
                         lookahead = input.read();
                         state = 0;
                     }
- 
+
                     case 41 -> {
                         //State for handling ternary operator :
                         lexeme = new StringBuilder();
@@ -331,7 +370,7 @@ public class LexicalAnalyzer {
                         lookahead = input.read();
                         state = 0;
                     }
-                        
+
                     case 45 -> {
                         //State for punctuation )
                         lexeme = new StringBuilder();
@@ -348,7 +387,7 @@ public class LexicalAnalyzer {
                         lookahead = input.read();
                         state = 0;
                     }
-                        
+
                     case 47 -> {
                         //State for punctuation )
                         lexeme = new StringBuilder();
@@ -357,7 +396,7 @@ public class LexicalAnalyzer {
                         lookahead = input.read();
                         state = 0;
                     }
-                        
+
                     case 48 -> {
                         //State for punctuation {
                         lexeme = new StringBuilder();
@@ -366,7 +405,7 @@ public class LexicalAnalyzer {
                         lookahead = input.read();
                         state = 0;
                     }
-                        
+
                     case 49 -> {
                         //State for punctuation )
                         lexeme = new StringBuilder();
@@ -376,42 +415,42 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                     case 50 -> {
-                         //State for handling single quote
-                         lexeme = new StringBuilder();
-                         lexeme.append((char) lookahead);
-                         lookahead = input.read();
-                         if (lookahead == -1) {
-                             error("Unclosed character literal");
-                             state = 0;
-                             break;
-                         }
-                         if (lookahead == '\\') {
-                             lexeme.append((char) lookahead);
-                             lookahead = input.read();
-                             if (lookahead == -1) {
-                                 error("Unclosed character literal after escape");
-                                 state = 0;
-                                 break;
-                             }
-                             if ("'\"\\btnrf".indexOf((char) lookahead) == -1) {
-                                 error("Invalid escape sequence '\\" + (char) lookahead + "' in character literal");
-                                 state = 0;
-                                 break;
-                             }
-                             lexeme.append((char) lookahead);
-                         } else {
-                             lexeme.append((char) lookahead);
-                         }
-                         lookahead = input.read();
-                         if (lookahead == '\'') {
-                             lexeme.append((char) lookahead);
-                             writeToken(lexeme.toString(), "CHAR_LITERAL");
-                             lookahead = input.read();
-                         } else {
-                             error("Missing closing quote for character literal");
-                         }
-                         state = 0;
+                    case 50 -> {
+                        //State for handling single quote
+                        lexeme = new StringBuilder();
+                        lexeme.append((char) lookahead);
+                        lookahead = input.read();
+                        if (lookahead == -1) {
+                            error("Unclosed character literal");
+                            state = 0;
+                            break;
+                        }
+                        if (lookahead == '\\') {
+                            lexeme.append((char) lookahead);
+                            lookahead = input.read();
+                            if (lookahead == -1) {
+                                error("Unclosed character literal after escape");
+                                state = 0;
+                                break;
+                            }
+                            if ("'\"\\btnrf".indexOf((char) lookahead) == -1) {
+                                error("Invalid escape sequence '\\" + (char) lookahead + "' in character literal");
+                                state = 0;
+                                break;
+                            }
+                            lexeme.append((char) lookahead);
+                        } else {
+                            lexeme.append((char) lookahead);
+                        }
+                        lookahead = input.read();
+                        if (lookahead == '\'') {
+                            lexeme.append((char) lookahead);
+                            writeToken(lexeme.toString(), "CHAR_LITERAL");
+                            lookahead = input.read();
+                        } else {
+                            error("Missing closing quote for character literal");
+                        }
+                        state = 0;
                     }
 
                     case 51 -> {
@@ -457,6 +496,41 @@ public class LexicalAnalyzer {
                         }
                     }
 
+                    // State 53: Processing multi-line comment content
+                    case 53 -> {
+                        try {
+                            lookahead = input.read();
+                            switch (lookahead) {
+                                case -1 -> {
+                                    error("Unclosed multi-line comment");
+                                    state = 0;
+                                }
+                                case '*' -> state = 54; // Potential end of comment
+                                default -> state = 53; // Stay in comment processing
+                            }
+                        } catch (IOException e) {
+                            error("Error reading multi-line comment: " + e.getMessage());
+                            state = 0;
+                        }
+                    }
+
+                    // State 54: Checking for closing '/' after '*' in comment
+                    case 54 -> {
+                        try {
+                            lookahead = input.read();
+                            if (lookahead == '/') {
+                                lookahead = input.read();
+                                state = 0;
+                            } else {
+                                // False alarm - '*' not followed by '/'
+                                lexeme.append('*');
+                                state = 53; // Return to comment processing
+                            }
+                        } catch (IOException e) {
+                            error("Error processing comment closure: " + e.getMessage());
+                            state = 0;
+                        }
+                    }
 
                     default -> {
                         error("Unexpected state: " + state);
@@ -468,14 +542,18 @@ public class LexicalAnalyzer {
             System.err.println("Error processing file: " + e.getMessage());
         } finally {
             try {
-                if (input != null) input.close();
-                if (output != null) output.close();
+                if (input != null) {
+                    input.close();
+                }
+                if (output != null) {
+                    output.close();
+                }
             } catch (IOException e) {
                 System.err.println("Error closing files: " + e.getMessage());
             }
         }
     }
-    
+
     //Function for processing identifiers
     private void processIdentifier() throws IOException {
         lexeme = new StringBuilder();
@@ -486,7 +564,7 @@ public class LexicalAnalyzer {
         String tokenLexeme = lexeme.toString();
         writeToken(tokenLexeme, isReserved(tokenLexeme) ? tokenLexeme : "ID");
     }
-    
+
     //Function for processing numbers: digits and floats
     private void processNumber() throws IOException {
         lexeme = new StringBuilder();
@@ -548,7 +626,6 @@ public class LexicalAnalyzer {
         output.newLine();
     }
 
- 
     private boolean isReserved(String lexeme) {
         for (String word : RESERVED_WORDS) {
             if (word.equals(lexeme)) {
@@ -559,7 +636,12 @@ public class LexicalAnalyzer {
     }
 
     private void error(String message) throws IOException {
-        System.err.println("Error: " + message);
+        System.err.println("Lexical Error: " + message);
+        // Write error to output for better debugging
+        output.write("ERROR: " + message);
+        output.newLine();
+        // Skip problematic character to continue analysis
         lookahead = input.read();
+        state = 0;
     }
 }
