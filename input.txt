@@ -1,4 +1,6 @@
-/*void main(void)
+/*
+void main(void)
 {	int a=10f; int b=20.5;
 	b = a++;
-}*/
+}
+*/

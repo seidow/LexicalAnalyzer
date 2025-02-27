@@ -518,13 +518,20 @@ public class LexicalAnalyzer {
                     case 54 -> {
                         try {
                             lookahead = input.read();
-                            if (lookahead == '/') {
-                                lookahead = input.read();
-                                state = 0;
-                            } else {
-                                // False alarm - '*' not followed by '/'
-                                lexeme.append('*');
-                                state = 53; // Return to comment processing
+                            switch (lookahead) {
+                                case -1 -> {
+                                    error("Unclosed multi-line comment");
+                                    state = 0;
+                                }
+                                case '/' -> {
+                                    lookahead = input.read();
+                                    state = 0;
+                                }
+                                default -> {
+                                    // False alarm - '*' not followed by '/'
+                                    lexeme.append('*');
+                                    state = 53; // Return to comment processing
+                                }
                             }
                         } catch (IOException e) {
                             error("Error processing comment closure: " + e.getMessage());
