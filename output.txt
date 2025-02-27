@@ -9,12 +9,12 @@ void		void
 int		int
 a		ID
 =		Assign_Op
-105e+3f		FLOAT_LITERAL
+10f		DOUBLE_LITERAL
 ;		semi_colon
 int		int
 b		ID
 =		Assign_Op
-2.0		DOUBLE_LITERAL
+20.5		DOUBLE_LITERAL
 ;		semi_colon
 b		ID
 =		Assign_Op
