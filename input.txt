@@ -1,0 +1,5 @@
+void main(void)
+{
+	int a=105e+3f; int b=2.0;
+	b = a++;
+}

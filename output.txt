@@ -1,0 +1,24 @@
+Lexemes 	 Tokens
+
+void		void
+main		ID
+(		left_Paranthesis
+void		void
+)		Right_Paranthesis
+{		Left_Curly_Bracket
+int		int
+a		ID
+=		Assign_Op
+105e+3f		FLOAT_LITERAL
+;		semi_colon
+int		int
+b		ID
+=		Assign_Op
+2.0		DOUBLE_LITERAL
+;		semi_colon
+b		ID
+=		Assign_Op
+a		ID
+++		inc_Op
+;		semi_colon
+}		Right_Curly_Bracket
