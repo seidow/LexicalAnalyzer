@@ -359,10 +359,10 @@ public class LexicalAnalyzer {
                     }
 
                     case 18 -> {
-                        //State for handling ternary operator :
+                        //State for handling the :
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
-                        writeToken(lexeme.toString(), "Ternary_Colon_Op");
+                        writeToken(lexeme.toString(), "Colon_Op");
                         lookahead = input.read();
                         state = 0;
                     }
