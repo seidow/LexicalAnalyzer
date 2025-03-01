@@ -4,7 +4,7 @@ Saed Mohamed Eidow      2250373
 Yazeed Saad AlOmari     2250589
 
 Section: CS1
-*/
+ */
 import java.io.*;
 
 public class LexicalAnalyzer {
@@ -30,7 +30,9 @@ public class LexicalAnalyzer {
 
     public static void main(String[] args) throws IOException {
         LexicalAnalyzer analyzer = new LexicalAnalyzer();
-        analyzer.output.write("Lexemes \t Tokens\n");
+
+        String outputHeader = String.format("%-25s %-25s", "Lexemes", "Tokens\n");
+        analyzer.output.write(outputHeader);
         analyzer.output.newLine();
         analyzer.tokenize();
         System.out.println("Tokens have been identified successfully.");
@@ -57,62 +59,61 @@ public class LexicalAnalyzer {
                         } else if (Character.isLetter((char) lookahead) || lookahead == '_' || lookahead == '$') {
                             state = 1;
                         } else if (Character.isDigit((char) lookahead)) {
-                            processNumber();
-                            state = 0;
+                            state = 2;
                         } else {
                             switch (lookahead) {
                                 case '&' ->
                                     state = 3;
                                 case '|' ->
-                                    state = 6;
+                                    state = 4;
                                 case '~' ->
-                                    state = 9;
+                                    state = 5;
                                 case '!' ->
-                                    state = 10;
+                                    state = 6;
                                 case '^' ->
-                                    state = 13;
+                                    state = 7;
                                 case '+' ->
-                                    state = 14;
+                                    state = 8;
                                 case '-' ->
-                                    state = 18;
+                                    state = 9;
                                 case '*' ->
-                                    state = 22;
+                                    state = 10;
                                 case '%' ->
-                                    state = 25;
+                                    state = 11;
                                 case '/' ->
-                                    state = 28;
+                                    state = 12;
                                 case '<' ->
-                                    state = 31;
+                                    state = 13;
                                 case '>' ->
-                                    state = 34;
+                                    state = 14;
                                 case '=' ->
-                                    state = 37;
+                                    state = 15;
                                 case '.' ->
-                                    state = 38;
+                                    state = 16;
                                 case '?' ->
-                                    state = 40;
+                                    state = 17;
                                 case ':' ->
-                                    state = 41;
+                                    state = 18;
                                 case ';' ->
-                                    state = 42;
+                                    state = 19;
                                 case ',' ->
-                                    state = 43;
+                                    state = 20;
                                 case '(' ->
-                                    state = 44;
+                                    state = 21;
                                 case ')' ->
-                                    state = 45;
+                                    state = 22;
                                 case '{' ->
-                                    state = 46;
+                                    state = 23;
                                 case '}' ->
-                                    state = 47;
+                                    state = 24;
                                 case '[' ->
-                                    state = 48;
+                                    state = 25;
                                 case ']' ->
-                                    state = 49;
+                                    state = 26;
                                 case '\'' ->
-                                    state = 50;
+                                    state = 27;
                                 case '\"' ->
-                                    state = 51;
+                                    state = 28;
                                 default ->
                                     error("Unrecognized symbol '" + (char) lookahead + "'");
                             }
@@ -121,6 +122,11 @@ public class LexicalAnalyzer {
 
                     case 1 -> {
                         processIdentifier();
+                        state = 0;
+                    }
+
+                    case 2 -> {
+                        processNumber();
                         state = 0;
                     }
 
@@ -139,13 +145,13 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 6 -> {
-                        // State for handling '&' operators: differentiate between bitwise '&' and logical '&&'
+                    case 4 -> {
+                        // State for handling '|' operators: differentiate between bitwise '|' and logical '||'
                         lexeme = new StringBuilder();
-                        lexeme.append((char) lookahead); //lexeme = '/'
-                        lookahead = input.read(); //lookaheed = /
+                        lexeme.append((char) lookahead);
+                        lookahead = input.read();
                         if (lookahead == '|') {
-                            lexeme.append((char) lookahead); //lexeme = '//'
+                            lexeme.append((char) lookahead);
                             writeToken(lexeme.toString(), "LogicOr_Op");
                             lookahead = input.read();
                         } else {
@@ -153,7 +159,7 @@ public class LexicalAnalyzer {
                         }
                         state = 0;
                     }
-                    case 9 -> {
+                    case 5 -> {
                         //State for handling Bitwise NOT
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -161,7 +167,7 @@ public class LexicalAnalyzer {
                         lookahead = input.read();
                         state = 0;
                     }
-                    case 10 -> {
+                    case 6 -> {
                         // State for handling '!' operators: differentiate between Logical '!' and relational '!='
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -176,7 +182,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 13 -> {
+                    case 7 -> {
                         //State for handling Bitwise XOR
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -185,7 +191,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 14 -> {
+                    case 8 -> {
                         // State for handling '+' operators: +=, ++, +
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -207,7 +213,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 18 -> {
+                    case 9 -> {
                         // State for handling '-' operators: -=, --, -
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -229,7 +235,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 22 -> {
+                    case 10 -> {
                         // State for handling '*' operators: *=, *
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -244,7 +250,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 25 -> {
+                    case 11 -> {
                         // State for handling '%' operators: %=, %
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -259,7 +265,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 28 -> {
+                    case 12 -> {
                         // State for handling '/' operators: /=, /, comments
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -281,7 +287,7 @@ public class LexicalAnalyzer {
                         } else if (lookahead == '*') {
                             // Start of multi-line comment
                             lookahead = input.read();
-                            state = 53; // Transition to multi-line comment processing
+                            state = 29; // Transition to multi-line comment processing
                         } else {
                             // Regular division operator
                             writeToken(lexeme.toString(), "Div_Op");
@@ -289,7 +295,7 @@ public class LexicalAnalyzer {
                         }
                     }
 
-                    case 31 -> {
+                    case 13 -> {
                         // State for handling '<' operators: <=, <
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -304,7 +310,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 34 -> {
+                    case 14 -> {
                         // State for handling '>' operators: >=, >
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -319,7 +325,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 37 -> {
+                    case 15 -> {
                         // State for handling '=' operators: ==, =
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -333,8 +339,8 @@ public class LexicalAnalyzer {
                         }
                         state = 0;
                     }
-                    
-                    case 38 -> {
+
+                    case 16 -> {
                         //State for handling punctuation dot .
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -343,7 +349,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 40 -> {
+                    case 17 -> {
                         //State for handling ternary operator ?
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -352,7 +358,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 41 -> {
+                    case 18 -> {
                         //State for handling ternary operator :
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -361,7 +367,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 42 -> {
+                    case 19 -> {
                         //State for punctuation ;
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -370,7 +376,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 43 -> {
+                    case 20 -> {
                         //State for punctuation ,
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -379,7 +385,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 44 -> {
+                    case 21 -> {
                         //State for punctuation (
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -388,7 +394,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 45 -> {
+                    case 22 -> {
                         //State for punctuation )
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -396,7 +402,7 @@ public class LexicalAnalyzer {
                         lookahead = input.read();
                         state = 0;
                     }
-                    case 46 -> {
+                    case 23 -> {
                         //State for punctuation {
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -405,7 +411,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 47 -> {
+                    case 24 -> {
                         //State for punctuation )
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -414,7 +420,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 48 -> {
+                    case 25 -> {
                         //State for punctuation {
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -423,7 +429,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 49 -> {
+                    case 26 -> {
                         //State for punctuation )
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -432,7 +438,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 50 -> {
+                    case 27 -> {
                         //State for handling single quote
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -470,7 +476,7 @@ public class LexicalAnalyzer {
                         state = 0;
                     }
 
-                    case 51 -> {
+                    case 28 -> {
                         //State for handling string literals ""
                         lexeme = new StringBuilder();
                         lexeme.append((char) lookahead);
@@ -513,8 +519,8 @@ public class LexicalAnalyzer {
                         }
                     }
 
-                    // State 53: Processing multi-line comment content
-                    case 53 -> {
+                    // State 29: Processing multi-line comment content
+                    case 29 -> {
                         try {
                             lookahead = input.read();
                             switch (lookahead) {
@@ -523,9 +529,9 @@ public class LexicalAnalyzer {
                                     state = 0;
                                 }
                                 case '*' ->
-                                    state = 54; // Potential end of comment
+                                    state = 30; // Potential end of comment
                                 default ->
-                                    state = 53; // Stay in comment processing
+                                    state = 29; // Stay in comment processing
                             }
                         } catch (IOException e) {
                             error("Error reading multi-line comment: " + e.getMessage());
@@ -534,7 +540,7 @@ public class LexicalAnalyzer {
                     }
 
                     // State 54: Checking for closing '/' after '*' in comment
-                    case 54 -> {
+                    case 30 -> {
                         try {
                             lookahead = input.read();
                             switch (lookahead) {
@@ -548,8 +554,7 @@ public class LexicalAnalyzer {
                                 }
                                 default -> {
                                     // False alarm - '*' not followed by '/'
-                                    lexeme.append('*');
-                                    state = 53; // Return to comment processing
+                                    state = 29; // Return to comment processing
                                 }
                             }
                         } catch (IOException e) {
@@ -637,18 +642,21 @@ public class LexicalAnalyzer {
             }
         }
         if (lookahead == 'f' || lookahead == 'F' || lookahead == 'd' || lookahead == 'D') {
-            isFloat = true;
-            lexeme.append((char) lookahead);
+            isFloat = true;  // Suffix implies a floating-point literal
+            char suffix = (char) lookahead; // Store the suffix
+            lexeme.append(suffix);
             lookahead = input.read();
-            writeToken(lexeme.toString(), lookahead == 'f' || lookahead == 'F' ? "FLOAT_LITERAL" : "DOUBLE_LITERAL");
+            writeToken(lexeme.toString(), (suffix == 'f' || suffix == 'F') ? "FLOAT_LITERAL" : "DOUBLE_LITERAL");
         } else {
             writeToken(lexeme.toString(), isFloat ? "DOUBLE_LITERAL" : "INT_LITERAL");
         }
+
     }
 
     //Function for writing tokens in the output file
     private void writeToken(String lexeme, String tokenType) throws IOException {
-        output.write(lexeme + "\t\t" + tokenType);
+        String formatted = String.format("%-25s %-25s", lexeme, tokenType);
+        output.write(formatted);
         output.newLine();
     }
 

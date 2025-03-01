@@ -9,7 +9,7 @@ public class LexicalAnalyzerTest {
         // Identifiers
         int a = 10, b = 20;
         float c = 30.5f;
-        double d = 40.123;
+        double d = 40e+5;
         char ch = 'X';
         String str = "Hello, World!";
         
